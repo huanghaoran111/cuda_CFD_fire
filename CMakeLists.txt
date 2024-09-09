@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.14)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_MODULE_PATH "/usr/local/lib/cmake/OpenVDB")
+set(CMAKE_CUDA_ARCHITECTURES 89)
+# set(CMAKE_MODULE_PATH "C:/Program Files/OpenVDB/lib/cmake/OpenVDB")
+# set(VCPKG_ROOT "E:\\packages\\vcpkg")
+# set(CMAKE_TOOLCHAIN_FILE " E:\\packages\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake")
+
+project(cuda_fire LANGUAGES C CXX CUDA)
+
+find_package(OpenVDB REQUIRED)
+message(STATUS "Found OpenVDB ${OpenVDB_VERSION}")
+add_executable(cuda_fire src/main.cu src/utils/writevdb.cpp)
+target_link_libraries(cuda_fire PRIVATE OpenVDB::openvdb)
+target_include_directories(cuda_fire PUBLIC .)
+target_compile_options(cuda_fire PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--extended-lambda>)
+target_compile_options(cuda_fire PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>)
+# target_link_libraries(cuda_fire PRIVATE CUDA::cudart)
+# find_package(TBB REQUIRED COMPONENTS tbb)
+# target_sources(cuda_fire PUBLIC ./src/utils/writevdb.cpp)
